@@ -210,10 +210,12 @@ document.body.addEventListener('htmx:confirm', function(evt) {
 });
 ```
 
-And here is an example using [sweet alert](https://sweetalert.js.org/guides/) on any element with a `confirm-with-sweet-alert="{question}"` attribute on it:
+And here is an example using [sweetalert2](https://sweetalert2.github.io/) on any element with a `confirm-with-sweet-alert="{question}"` attribute on it:
 
 ```javascript
-document.body.addEventListener('htmx:confirm', function(evt) {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('htmx:confirm', function(evt) {
   // 1. The requirement to show the sweet alert is that the element has a confirm-with-sweet-alert
   //    attribute on it, if it doesn't we can return early and let the default behavior happen
   if (!evt.detail.target.hasAttribute('confirm-with-sweet-alert')) return
@@ -225,12 +227,15 @@ document.body.addEventListener('htmx:confirm', function(evt) {
   evt.preventDefault();
 
   // 4. Show the sweet alert
+  Swal.fire({
+      title: "Are you sure?",
+      text: question || "Are you sure you want to continue?",
+      
   swal({
     title: "Are you sure?",
     text: question || "Are you sure you want to continue?",
     icon: "warning",
     buttons: true,
-    dangerMode: true,
   }).then((confirmed) => {
     if (confirmed) {
       // 5. If the user confirms, we can manually issue the request
@@ -238,6 +243,10 @@ document.body.addEventListener('htmx:confirm', function(evt) {
     }
   });
 });
+</script>
+<button hx-get="/confirmed" hx-confirm="Some confirm text here">
+  Click Me
+</button>
 ```
 
 ##### Details
